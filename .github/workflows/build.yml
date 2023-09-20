@@ -1,0 +1,30 @@
+name: Push
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Event
+        run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - name: Check Runner
+        run: echo "This job is running on a ${{ runner.os }} server hosted by GitHub!"
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Setup JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build Debug APK
+        run: ./gradlew build
+      - name: Build status report
+        run: echo "Build status report=${{ job.status }}."
